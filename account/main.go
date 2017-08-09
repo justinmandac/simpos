@@ -21,7 +21,7 @@ func CreateAccountHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// GetAccountHandler Get Account
+// GetAccountHandler Authenticates the account provided in the request.
 func GetAccountHandler(w http.ResponseWriter, r *http.Request) {
 
 }
