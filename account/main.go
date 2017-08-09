@@ -4,27 +4,15 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"simpos/account/models"
 
 	"github.com/gorilla/mux"
 )
 
-// JSONResponse generic model for JSON responses.
-type JSONResponse struct {
-	Err     int         `json:"err"`
-	Message string      `json:"message"`
-	Data    interface{} `json:"data"`
-}
-
-// Account user account model
-type Account struct {
-	ID   string
-	Name string
-}
-
 // AccountMainHandler index.
 func AccountMainHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Index handled\n")
-	data := JSONResponse{Err: 0, Message: "Success", Data: nil}
+	data := models.JSONResponse{Err: 0, Message: "Success", Data: nil}
 	json.NewEncoder(w).Encode(data)
 }
 
