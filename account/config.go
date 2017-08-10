@@ -15,7 +15,7 @@ var (
 	Config = &ConfigModel{
 		DBName:     "simpos_account",
 		DBUser:     "root",
-		DBPassword: "",
+		DBPassword: "p@ssw0rd",
 		DBHost:     "localhost",
 		DBPort:     "3306",
 		// SvcPort This service's port.

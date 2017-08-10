@@ -7,8 +7,14 @@ import (
 	"net/http/httputil"
 	"simpos/account/models"
 
+	"github.com/go-sql-driver/mysql"
+
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
+	"github.com/jmoiron/sqlx"
 )
+
+var db *sqlx.DB
 
 // AccountMainHandler index.
 func AccountMainHandler(w http.ResponseWriter, r *http.Request) {
@@ -47,7 +53,21 @@ func DeleteAccountHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	config := &mysql.Config{
+		User:   Config.DBUser,
+		Passwd: Config.DBPassword,
+		DBName: Config.DBName,
+	}
+	// username:password@protocol(address)/dbname?param=value
+	db, err := sqlx.Connect("mysql", config.FormatDSN())
 	log.Printf("Account Service started at %s", Config.SvcPort)
+
+	err = db.Ping()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	r := mux.NewRouter()
 
 	r.HandleFunc("/", AccountMainHandler)
