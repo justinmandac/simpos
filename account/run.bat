@@ -1,1 +1,1 @@
-go build . && account.exe
+go build -o bin/bin && ./bin/bin

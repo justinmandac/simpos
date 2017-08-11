@@ -1,1 +1,1 @@
-go build . && ./account
+go build -o bin/bin && ./bin/bin
