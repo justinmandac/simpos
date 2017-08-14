@@ -34,7 +34,7 @@ func CreateAccountHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	log.Printf("%s\n", account.GeneratePassword())
+	log.Printf("%s\n", models.GeneratePassword(account).Password)
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(models.JSONResponse{Err: 0, Message: "Success", Data: nil})

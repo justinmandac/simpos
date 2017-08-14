@@ -11,8 +11,9 @@ type Account struct {
 
 // AuthenticatePassword checks if the provided password matches
 func (acct *Account) AuthenticatePassword(password string) bool {
-
-	return true
+	err := bcrypt.CompareHashAndPassword([]byte(acct.StoredHash), []byte(password))
+	// nil means passwords match
+	return err == nil
 }
 
 // CreateAccountRequest request expected from the client when creating a new account.
@@ -21,11 +22,13 @@ type CreateAccountRequest struct {
 	Password string `json:"password"`
 }
 
-// GeneratePassword creates a password
-func (acct *CreateAccountRequest) GeneratePassword() string {
+// GeneratePassword creates a password. acct is the request object containing the plaintext password
+func GeneratePassword(acct CreateAccountRequest) *CreateAccountRequest {
+	var req *CreateAccountRequest
 	password := []byte(acct.Password)
 	passwordHash, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	return string(passwordHash)
+	req = &CreateAccountRequest{Username: acct.Username, Password: string(passwordHash)}
+	return req
 }
 
 // User user model.
