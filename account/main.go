@@ -33,6 +33,9 @@ func CreateAccountHandler(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewDecoder(r.Body).Decode(&account); err != nil {
 		panic(err)
 	}
+
+	log.Printf("%s\n", account.GeneratePassword())
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(models.JSONResponse{Err: 0, Message: "Success", Data: nil})
 }
