@@ -14,7 +14,7 @@ type ConfigModel struct {
 var (
 	Config = &ConfigModel{
 		DBName:     "simpos_account",
-		DBUser:     "root",
+		DBUser:     "simpos_account",
 		DBPassword: "p@ssw0rd",
 		DBHost:     "localhost",
 		DBPort:     "3306",
