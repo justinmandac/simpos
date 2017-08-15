@@ -4,9 +4,9 @@ import "golang.org/x/crypto/bcrypt"
 
 // Account user account model.
 type Account struct {
-	ID         string
-	Username   string
-	StoredHash string
+	ID         string `db:"Id"`
+	Username   string `db:"username"`
+	StoredHash string `db:"password"`
 }
 
 // AuthenticatePassword checks if the provided password matches
@@ -16,18 +16,18 @@ func (acct *Account) AuthenticatePassword(password string) bool {
 	return err == nil
 }
 
-// CreateAccountRequest request expected from the client when creating a new account.
-type CreateAccountRequest struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+// AccountRequest request expected from the client when creating a new account.
+type AccountRequest struct {
+	Username string `json:"username" db:"username"`
+	Password string `json:"password" db:"password"`
 }
 
 // GeneratePassword creates a password. acct is the request object containing the plaintext password
-func GeneratePassword(acct CreateAccountRequest) *CreateAccountRequest {
-	var req *CreateAccountRequest
+func GeneratePassword(acct AccountRequest) AccountRequest {
+	var req AccountRequest
 	password := []byte(acct.Password)
 	passwordHash, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	req = &CreateAccountRequest{Username: acct.Username, Password: string(passwordHash)}
+	req = AccountRequest{Username: acct.Username, Password: string(passwordHash)}
 	return req
 }
 
