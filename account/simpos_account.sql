@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `simpos_account` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `simpos_account`;
 -- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
 -- Host: localhost    Database: simpos_account
@@ -26,18 +24,13 @@ DROP TABLE IF EXISTS `account`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `account` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
-  ` username` varchar(64) NOT NULL,
+  `username` varchar(64) NOT NULL,
   `password` varchar(512) NOT NULL,
-  `salt` int(64) NOT NULL,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `Id_UNIQUE` (`Id`),
-  UNIQUE KEY ` username_UNIQUE` (` username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  UNIQUE KEY ` username_UNIQUE` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping routines for database 'simpos_account'
---
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -48,4 +41,4 @@ CREATE TABLE `account` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-08-10 20:46:34
+-- Dump completed on 2017-08-15 20:38:07
