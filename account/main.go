@@ -76,6 +76,35 @@ func GetAccountHandler(w http.ResponseWriter, r *http.Request) {
 
 // UpdateAccountHandler Updates account information.
 func UpdateAccountHandler(w http.ResponseWriter, r *http.Request) {
+	var dbAccount models.Account
+	var reqAccount models.AccountRequest
+	vars := mux.Vars(r)
+
+	if err := json.NewDecoder(r.Body).Decode(&reqAccount); err != nil {
+		log.Printf("%s\n", err)
+		writeJSONResponse(w, 2, "Invalid", err)
+		return
+	}
+
+	reqAccount.Username = vars["username"]
+
+	err := db.QueryRowx(`SELECT * FROM account WHERE username=?;`, reqAccount.Username).StructScan(&dbAccount)
+
+	// Username not found
+	if err != nil {
+		writeJSONResponse(w, 1, "Error", err)
+		return
+	}
+
+	targetAccount := models.GeneratePassword(reqAccount)
+	_, err = db.Exec(`UPDATE account SET password = ? WHERE username = ?`, targetAccount.Password, targetAccount.Username)
+
+	// Username not found
+	if err != nil {
+		writeJSONResponse(w, 1, "Error", err)
+		return
+	}
+	writeJSONResponse(w, 0, "Success", nil)
 }
 
 // DeleteAccountHandler Delete an account/render account inactive.
@@ -98,6 +127,7 @@ func main() {
 	r.HandleFunc("/", AccountMainHandler)
 	r.HandleFunc("/account", CreateAccountHandler).Methods(http.MethodPost)
 	r.HandleFunc("/account/auth", GetAccountHandler).Methods(http.MethodPost)
+	r.HandleFunc("/account/{username}", UpdateAccountHandler).Methods(http.MethodPut)
 
 	http.Handle("/", r)
 	log.Fatal(http.ListenAndServe(Config.SvcPort, nil))
