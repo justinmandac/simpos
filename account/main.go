@@ -16,6 +16,11 @@ import (
 
 var db *sqlx.DB
 
+func writeJSONResponse(w http.ResponseWriter, errcode int, message string, data interface{}) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(models.JSONResponse{Err: errcode, Message: message, Data: data})
+}
+
 // AccountMainHandler index.
 func AccountMainHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Index handled\n")
@@ -36,17 +41,14 @@ func CreateAccountHandler(w http.ResponseWriter, r *http.Request) {
 
 	request := models.GeneratePassword(account)
 
-	w.Header().Set("Content-Type", "application/json")
-
 	_, err := db.Exec(`INSERT INTO account (username, password) VALUES (?, ?);`, request.Username, request.Password)
 
 	if err != nil {
 		log.Printf("%s", err)
-		json.NewEncoder(w).Encode(models.JSONResponse{Err: 1, Message: "Error", Data: nil})
+		writeJSONResponse(w, 1, "Error", nil)
 		return
 	}
-
-	json.NewEncoder(w).Encode(models.JSONResponse{Err: 0, Message: "Success", Data: request})
+	writeJSONResponse(w, 0, "Success", nil)
 }
 
 // GetAccountHandler Authenticates the account provided in the request.
@@ -63,20 +65,17 @@ func GetAccountHandler(w http.ResponseWriter, r *http.Request) {
 
 	err := db.QueryRowx(`SELECT * FROM account WHERE username=?`, account.Username).StructScan(&dbAccount)
 
-	w.Header().Set("Content-Type", "application/json")
-
 	if !dbAccount.AuthenticatePassword(account.Password) {
 		log.Printf("%s\n", err)
-		json.NewEncoder(w).Encode(models.JSONResponse{Err: 1, Message: "Error", Data: nil})
+		writeJSONResponse(w, 1, "Error", nil)
 		return
 	}
 	log.Printf("%s authenticated\n", account.Username)
-	json.NewEncoder(w).Encode(models.JSONResponse{Err: 0, Message: "Success", Data: nil})
+	writeJSONResponse(w, 1, "Error", nil)
 }
 
 // UpdateAccountHandler Updates account information.
 func UpdateAccountHandler(w http.ResponseWriter, r *http.Request) {
-
 }
 
 // DeleteAccountHandler Delete an account/render account inactive.
