@@ -74,7 +74,7 @@ func GetAccountHandler(w http.ResponseWriter, r *http.Request) {
 	writeJSONResponse(w, 1, "Error", nil)
 }
 
-// UpdateAccountHandler Updates account information.
+// UpdateAccountHandler Updates the account password.
 func UpdateAccountHandler(w http.ResponseWriter, r *http.Request) {
 	var dbAccount models.Account
 	var reqAccount models.AccountRequest
@@ -128,6 +128,7 @@ func main() {
 	r.HandleFunc("/account", CreateAccountHandler).Methods(http.MethodPost)
 	r.HandleFunc("/account/auth", GetAccountHandler).Methods(http.MethodPost)
 	r.HandleFunc("/account/{username}", UpdateAccountHandler).Methods(http.MethodPut)
+	r.HandleFunc("/account/{username}", DeleteAccountHandler).Methods(http.MethodDelete)
 
 	http.Handle("/", r)
 	log.Fatal(http.ListenAndServe(Config.SvcPort, nil))
